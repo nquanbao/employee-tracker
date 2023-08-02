@@ -61,7 +61,7 @@ const questions = [
     type: 'list',
     name: 'department_id',
     message: 'Which department will be assigned with this role?',
-    choices: async() => getDepts(),
+    choices: async() => getDepartment(),
     when: ({task}) => task == 'Add a role'
   },
   {
@@ -80,7 +80,7 @@ const questions = [
     type: 'list',
     name: 'id',
     message: "Which employee do you want to update?",
-    choices: async() => getEmps(),
+    choices: async() => getEmployee(),
     when: ({task}) => task == 'Update an employee role'
   },
   {
@@ -94,12 +94,12 @@ const questions = [
     type: 'list',
     name: 'manager_id',
     message: "Who is the employee's manager?",
-    choices: async() => getEmps(),
+    choices: async() => getEmployee(),
     when: ({task}) => task == 'Add an employee' || task == 'Update an employee role'
   },
 ];
 //Function for each option in inquirer
-viewDepts = () =>
+viewDepartments = () =>
 db
   .promise()
   .query("SELECT * FROM department")
@@ -111,52 +111,52 @@ viewRoles = () =>
 db
   .promise()
   .query(
-    `
-SELECT
-    r.id,
-    r.title,
-    r.salary,
-    d.name 'department'
-FROM role r
-JOIN department d 
-ON r.department_id = d.id
-`
+        `
+        SELECT
+            r.id,
+            r.title,
+            r.salary,
+            d.name 'department'
+        FROM role r
+        JOIN department d 
+        ON r.department_id = d.id
+        `
   )
   .then(([data]) => {
     console.table(data);
   });
 
-viewEmps = () =>
+viewEmployees = () =>
 db
   .promise()
   .query(
-    `
-  SELECT
-    e.id,
-    e.first_name,
-    e.last_name,
-    r.title,
-    d.name "department",
-    r.salary,
-    concat(e2.first_name, " ", e2.last_name) AS "manager"
-  FROM employee AS e
-  JOIN role AS r
-  ON e.role_id = r.id
-  JOIN department AS d
-  ON r.department_id = d.id
-  LEFT JOIN employee AS e2
-  ON e.manager_id = e2.id
-`
+        `
+      SELECT
+        e.id,
+        e.first_name,
+        e.last_name,
+        r.title,
+        d.name "department",
+        r.salary,
+        concat(e2.first_name, " ", e2.last_name) AS "manager"
+      FROM employee AS e
+      JOIN role AS r
+      ON e.role_id = r.id
+      JOIN department AS d
+      ON r.department_id = d.id
+      LEFT JOIN employee AS e2
+      ON e.manager_id = e2.id
+      `
   )
   .then(([data]) => {
     console.table(data);
   });
 
-addDept = async ({ name }) => {
-db.promise().query(`INSERT INTO department SET ?`, { name });
+addDepartment = async ({ name }) => {
+db.promise().query('INSERT INTO department SET ?', { name });
 };
 
-getDepts = async () => {
+getDepartment = async () => {
 let [data] = await db
   .promise()
   .query('SELECT name, id AS "value" FROM department');
@@ -170,7 +170,7 @@ let [data] = await db
 return data;
 };
 
-getEmps = async () => {
+getEmployee = async () => {
 let [data] = await db
   .promise()
   .query(
@@ -194,7 +194,7 @@ let [data] = await db
   );
 };
 
-addEmp = async ({ first_name, last_name, role_id, manager_id }) => {
+addEmployee = async ({ first_name, last_name, role_id, manager_id }) => {
 await db
   .promise()
   .query(
@@ -207,11 +207,11 @@ await db
   );
 };
 
-updateRole = async ({ role_id, manager_id, id}) => {
+updateRole = async ({role_id,manager_id,id}) => {
 
 await db
   .promise()
-  .query("UPDATE employee SET ? WHERE ?", [{role_id},{manager_id},{id}], (err) => {
+  .query("UPDATE employee SET ? WHERE ?", [{role_id,manager_id},{id}], (err) => {
     if (err) return err;
     return;
   });
@@ -224,12 +224,12 @@ const init = () =>
     let {task} = answer;
     
     switch (task) {
-      case 'View all departments': return viewDepts().then(init);
+      case 'View all departments': return viewDepartments().then(init);
       case 'View all roles': return viewRoles().then(init);
-      case 'View all employees': return viewEmps().then(init);
-      case 'Add a department': return addDept(answer).then(init);
+      case 'View all employees': return viewEmployees().then(init);
+      case 'Add a department': return addDepartment(answer).then(init);
       case 'Add a role': return addRole(answer).then(init);
-      case 'Add an employee': return addEmp(answer).then(init);
+      case 'Add an employee': return addEmployee(answer).then(init);
       case 'Update an employee role': return updateRole(answer).then(init);
       case 'Quit': return console.log('Thank you!!!!!!');
     }
