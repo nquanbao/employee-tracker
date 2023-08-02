@@ -4,7 +4,7 @@
 
 - What was your motivation?
     
-    takes in user input to generate input and modify information of employee. 
+    takes in user input to generate input and modify information of employee, department and role of that company. 
 
 - Why did you build this project? (Note: the answer is not "Because it was a homework assignment.")
     
@@ -25,7 +25,7 @@
 
 ## Installation
 
-    Creat a repo on GitHub and clone it to local computer. Coding for Shape.js, text.js, and index.js. Run the indexsx.js to create a svg file by tthe command line is node index.js
+    Create a repo on GitHub and clone it to local computer. Coding for schema.sql and seeds.sql to insert database for server. Also code server.js to run command line to collect information. 
 
 ## Usage
 
