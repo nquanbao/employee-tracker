@@ -29,7 +29,7 @@
 
 ## Usage
 
-![Sreenshot of App]
+[Link to walkthrough video](https://drive.google.com/file/d/1qNF-HLDw8oUxvRBWKjBNdrRZYl0xBJK8/view)
 
 ## License
 
